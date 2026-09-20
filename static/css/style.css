@@ -267,7 +267,7 @@ select:focus-visible, textarea:focus-visible {
    /* linear-gradient(180deg, rgba(6,12,26,0.75), rgba(6,12,26,0.92)),
     radial-gradient(circle at 20% 20%, rgba(18,150,63,0.35), transparent 45%),
     linear-gradient(135deg, var(--navy-950), var(--navy-800)),*/
-    url("../images/football-bg.png");
+    url("../images/football-bg.webp");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
