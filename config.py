@@ -19,10 +19,17 @@ _DEV_FALLBACK_SECRET_KEY = "dev-only-insecure-key-" + secrets.token_hex(8)
 def _normalize_database_url(url: str) -> str:
     """
     Neon and some other providers hand out URLs starting with
-    'postgres://', but SQLAlchemy + psycopg require 'postgresql://'.
+    'postgres://'. SQLAlchemy needs 'postgresql://' at minimum, and
+    since requirements.txt installs psycopg (v3) rather than the
+    older psycopg2, the driver must be named explicitly as
+    'postgresql+psycopg://' - otherwise SQLAlchemy defaults to
+    trying psycopg2, which isn't installed, and the app fails to
+    import entirely.
     """
     if url and url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql://", 1)
+        url = url.replace("postgres://", "postgresql+psycopg://", 1)
+    elif url and url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
     return url
 
 
