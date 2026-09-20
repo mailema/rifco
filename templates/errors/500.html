@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Server Error — RIFCO{% endblock %}
+{% block content %}
+<div class="error-shell">
+  <div>
+    <div class="code">500</div>
+    <h1>Something Went Wrong</h1>
+    <p>An unexpected error occurred. Nothing was changed. Please try again shortly.</p>
+    <a href="{{ url_for('public.home') }}" class="btn btn-gold">Return Home</a>
+  </div>
+</div>
+{% endblock %}

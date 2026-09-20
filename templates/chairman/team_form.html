@@ -1,0 +1,31 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'teams' %}
+{% block title %}{{ 'Edit Team' if mode == 'edit' else 'Create Team' }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ 'Edit Team' if mode == 'edit' else 'Create Team' }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('chairman.teams') }}">Teams</a> / {{ 'Edit' if mode == 'edit' else 'Create' }}</div>
+  </div>
+</div>
+
+<div class="panel" style="max-width:480px;">
+  <form method="POST" novalidate>
+    {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+    <div class="form-group">
+      <label for="team_name">Team Name</label>
+      <input class="form-control" type="text" id="team_name" name="team_name" required value="{{ form.get('team_name', '') }}">
+    </div>
+    <div class="form-group">
+      <label for="league_id">League</label>
+      <select class="form-control" id="league_id" name="league_id" required>
+        <option value="">Select league</option>
+        {% for l in leagues %}
+          <option value="{{ l.id }}" {{ 'selected' if (form.get('league_id')|string) == (l.id|string) }}>{{ l.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">{{ 'Save Changes' if mode == 'edit' else 'Create Team' }}</button>
+  </form>
+</div>
+{% endblock %}

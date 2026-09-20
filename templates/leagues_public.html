@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Leagues — RIFCO{% endblock %}
+{% block content %}
+<section class="section section--muted" style="min-height:60vh;">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">Competitions</span>
+      <h2>RIFCO Leagues</h2>
+      <p>All leagues registered within the RIFCO structure.</p>
+    </div>
+
+    {% if leagues %}
+      <div class="league-grid">
+        {% for league in leagues %}
+          <div class="league-card">
+            <div class="league-banner"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="league-body">
+              <h4>{{ league.name }}</h4>
+              <p>{{ league.teams | length }} registered team{{ '' if league.teams|length == 1 else 's' }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fa-solid fa-shield-halved"></i>
+        <p>No leagues have been registered yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

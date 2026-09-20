@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Access Denied — RIFCO{% endblock %}
+{% block content %}
+<div class="error-shell">
+  <div>
+    <div class="code">403</div>
+    <h1>Access Denied</h1>
+    <p>You do not have permission to view this page. If you believe this is a mistake, contact the Chairman.</p>
+    <a href="{{ url_for('public.home') }}" class="btn btn-gold">Return Home</a>
+  </div>
+</div>
+{% endblock %}

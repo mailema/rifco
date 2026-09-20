@@ -1,0 +1,27 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'members' %}
+{% block title %}{{ member.name }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ member.name }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('chairman.members') }}">Members</a> / {{ member.name }}</div>
+  </div>
+  <a href="{{ url_for('chairman.update_member', member_id=member.id) }}" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+</div>
+
+<div class="panel" style="max-width:640px;">
+  <table class="data-table">
+    <tbody>
+      <tr><th>Member ID</th><td>{{ member.member_id }}</td></tr>
+      <tr><th>Rank</th><td><span class="badge {{ 'badge-gold' if member.rank == 'Chairman' else ('badge-green' if member.rank == 'Coach' else ('badge-red' if member.rank == 'Transfer Committee' else 'badge-navy')) }}">{{ member.rank }}</span></td></tr>
+      <tr><th>Email</th><td>{{ member.email }}</td></tr>
+      <tr><th>Phone</th><td>{{ member.phone }}</td></tr>
+      <tr><th>Address</th><td>{{ member.address }}</td></tr>
+      <tr><th>Team</th><td>{{ member.team.team_name if member.team else '—' }}</td></tr>
+      <tr><th>League</th><td>{{ member.team.league.name if member.team else '—' }}</td></tr>
+      <tr><th>Registered</th><td>{{ member.created_at.strftime('%d %b %Y') }}</td></tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'teams' %}
+{% block title %}{{ team.team_name }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ team.team_name }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('chairman.teams') }}">Teams</a> / {{ team.team_name }}</div>
+  </div>
+  <div class="flex gap-sm">
+    <a href="{{ url_for('chairman.update_team', team_id=team.id) }}" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+    <form method="POST" action="{{ url_for('chairman.delete_team', team_id=team.id) }}"
+          onsubmit="return confirm('Delete this team? This cannot be undone.');">
+      {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+      <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-value">{{ team.league.name }}</div><div class="stat-label">League</div></div>
+  <div class="stat-card"><div class="stat-value">{{ team.players|length }}</div><div class="stat-label">Players</div></div>
+  <div class="stat-card"><div class="stat-value">{{ team.coaches|length }}</div><div class="stat-label">Coaches</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-header"><h3>Coaches</h3></div>
+  {% if team.coaches %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Email</th></tr></thead>
+        <tbody>
+          {% for c in team.coaches %}
+            <tr><td>{{ c.name }}</td><td>{{ c.email }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-whistle"></i><p>No coach assigned yet.</p></div>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <div class="panel-header"><h3>Players</h3></div>
+  {% if team.players %}
+    <div class="player-grid">
+      {% for p in team.players %}
+        <div class="player-card">
+          <div class="player-photo">
+            {% if p.picture %}
+              <img src="{{ url_for('static', filename=p.picture) }}" alt="Photo of {{ p.name }}">
+            {% else %}
+              <i class="fa-solid fa-user"></i>
+            {% endif %}
+          </div>
+          <div class="player-card-body">
+            <h4>{{ p.name }}</h4>
+            <div class="pos">{{ p.position }}</div>
+            <div class="meta">ID {{ p.player_id }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-futbol"></i><p>No players registered to this team yet.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

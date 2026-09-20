@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Transfer History — RIFCO{% endblock %}
+{% block content %}
+<section class="section section--muted" style="min-height:70vh;">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">RIFCO</span>
+      <h2>Transfer History</h2>
+      <p>A full, unmodifiable record of every player transfer.</p>
+    </div>
+
+    <div class="panel">
+      <form class="search-bar" method="GET">
+        <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Search by player name or Player ID...">
+        <button class="btn btn-outline-dark" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+      </form>
+
+      {% if transfers %}
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Player</th><th>Player ID</th><th>From</th><th>To</th><th>Date</th><th>By</th></tr></thead>
+            <tbody>
+              {% for t in transfers %}
+                <tr>
+                  <td>{{ t.player.name }}</td>
+                  <td>{{ t.player.player_id }}</td>
+                  <td>{{ t.from_team.team_name }}</td>
+                  <td>{{ t.to_team.team_name }}</td>
+                  <td>{{ t.transferred_at.strftime('%d %b %Y, %H:%M') }}</td>
+                  <td>{{ t.performed_by.name if t.performed_by else '—' }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state"><i class="fa-solid fa-right-left"></i><p>No transfers recorded yet.</p></div>
+      {% endif %}
+    </div>
+
+    <div class="text-center">
+      <a href="{{ url_for('transfer.portal') }}" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-arrow-left"></i> Back to Transfer Portal</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

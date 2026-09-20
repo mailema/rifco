@@ -1,0 +1,23 @@
+# Environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Database (local dev fallback only)
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded player photos (user-generated content)
+static/uploads/players/*
+!static/uploads/players/.gitkeep
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

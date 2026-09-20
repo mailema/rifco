@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Login — RIFCO{% endblock %}
+{% block content %}
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="icon brand-mark" style="width:56px;height:56px;font-size:1.4rem;">
+      <i class="fa-solid fa-futbol"></i>
+    </div>
+    <h1>RIFCO Login</h1>
+    <p class="subtitle">Sign in to access your portal.</p>
+
+    <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+      {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" type="email" id="email" name="email" required autofocus autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Log In</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

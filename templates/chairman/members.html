@@ -1,0 +1,41 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'members' %}
+{% block title %}Members — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>Members</h1>
+    <div class="breadcrumb">{{ members|length }} total</div>
+  </div>
+  <a href="{{ url_for('chairman.register_member') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-user-plus"></i> Register Member</a>
+</div>
+
+<div class="panel">
+  <form class="search-bar" method="GET">
+    <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Search by name, member ID or email...">
+    <button class="btn btn-outline-dark" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+  </form>
+
+  {% if members %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Member ID</th><th>Rank</th><th>Team</th><th>Email</th><th></th></tr></thead>
+        <tbody>
+          {% for m in members %}
+            <tr>
+              <td>{{ m.name }}</td>
+              <td>{{ m.member_id }}</td>
+              <td><span class="badge {{ 'badge-gold' if m.rank == 'Chairman' else ('badge-green' if m.rank == 'Coach' else ('badge-red' if m.rank == 'Transfer Committee' else 'badge-navy')) }}">{{ m.rank }}</span></td>
+              <td>{{ m.team.team_name if m.team else '—' }}</td>
+              <td>{{ m.email }}</td>
+              <td><a href="{{ url_for('chairman.member_detail', member_id=m.id) }}" class="btn btn-outline-dark btn-sm">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-users"></i><p>No members found.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

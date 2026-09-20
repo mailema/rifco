@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<button class="mobile-dash-toggle"><i class="fa-solid fa-bars"></i> Menu</button>
+<div class="dash-shell">
+  <aside class="dash-sidebar">
+    <div class="sidebar-title">Chairman Portal</div>
+    <a href="{{ url_for('chairman.dashboard') }}" class="{{ 'active' if active == 'dashboard' }}"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+    <a href="{{ url_for('chairman.members') }}" class="{{ 'active' if active == 'members' }}"><i class="fa-solid fa-users"></i> Members</a>
+    <a href="{{ url_for('chairman.teams') }}" class="{{ 'active' if active == 'teams' }}"><i class="fa-solid fa-people-group"></i> Teams</a>
+    <a href="{{ url_for('chairman.leagues') }}" class="{{ 'active' if active == 'leagues' }}"><i class="fa-solid fa-shield-halved"></i> Leagues</a>
+    <a href="{{ url_for('public.players') }}" class="{{ 'active' if active == 'players' }}"><i class="fa-solid fa-futbol"></i> Players</a>
+    <a href="{{ url_for('chairman.system_controls') }}" class="{{ 'active' if active == 'system' }}"><i class="fa-solid fa-sliders"></i> System Controls</a>
+    <div class="sidebar-title" style="margin-top:14px;">Account</div>
+    <a href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Log Out</a>
+  </aside>
+  <div class="dash-main">
+    {% block dash_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

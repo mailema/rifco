@@ -1,0 +1,40 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'teams' %}
+{% block title %}Teams — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>Teams</h1>
+    <div class="breadcrumb">{{ teams|length }} total</div>
+  </div>
+  <a href="{{ url_for('chairman.create_team') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Create Team</a>
+</div>
+
+<div class="panel">
+  <form class="search-bar" method="GET">
+    <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Search team name...">
+    <button class="btn btn-outline-dark" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+  </form>
+
+  {% if teams %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Team</th><th>League</th><th>Players</th><th>Coach</th><th></th></tr></thead>
+        <tbody>
+          {% for t in teams %}
+            <tr>
+              <td>{{ t.team_name }}</td>
+              <td>{{ t.league.name }}</td>
+              <td>{{ t.players|length }}</td>
+              <td>{{ t.coaches[0].name if t.coaches else '—' }}</td>
+              <td><a href="{{ url_for('chairman.team_detail', team_id=t.id) }}" class="btn btn-outline-dark btn-sm">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-people-group"></i><p>No teams found.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

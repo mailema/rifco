@@ -1,0 +1,47 @@
+{% extends "coach/_layout.html" %}
+{% set active = 'players' %}
+{% block title %}{{ player.name }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ player.name }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('coach.players') }}">My Players</a> / {{ player.name }}</div>
+  </div>
+  <div class="flex gap-sm">
+    {% if settings.player_update_open %}
+      <a href="{{ url_for('coach.update_player', player_id=player.id) }}" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-pen"></i> Edit</a>
+    {% endif %}
+    <form method="POST" action="{{ url_for('coach.delete_player', player_id=player.id) }}"
+          onsubmit="return confirm('Remove this player from the roster? This cannot be undone.');">
+      {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+      <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Remove</button>
+    </form>
+  </div>
+</div>
+
+{% if not settings.player_update_open %}
+  <div class="status-banner closed">
+    <i class="fa-solid fa-lock"></i> Player updates are currently closed by the Chairman.
+  </div>
+{% endif %}
+
+<div class="panel" style="max-width:560px;">
+  <div class="player-photo" style="height:220px;border-radius:12px;margin-bottom:20px;">
+    {% if player.picture %}
+      <img src="{{ url_for('static', filename=player.picture) }}" alt="Photo of {{ player.name }}">
+    {% else %}
+      <i class="fa-solid fa-user"></i>
+    {% endif %}
+  </div>
+  <table class="data-table">
+    <tbody>
+      <tr><th>Player ID</th><td>{{ player.player_id }}</td></tr>
+      <tr><th>Position</th><td>{{ player.position }}</td></tr>
+      <tr><th>Phone</th><td>{{ player.phone }}</td></tr>
+      <tr><th>Team</th><td>{{ player.team.team_name }}</td></tr>
+      <tr><th>Registered</th><td>{{ player.created_at.strftime('%d %b %Y') }}</td></tr>
+      <tr><th>Last Updated</th><td>{{ player.updated_at.strftime('%d %b %Y') }}</td></tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

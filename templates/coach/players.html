@@ -1,0 +1,43 @@
+{% extends "coach/_layout.html" %}
+{% set active = 'players' %}
+{% block title %}My Players — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>My Players</h1>
+    <div class="breadcrumb">{{ team.team_name }} &middot; {{ players|length }} registered</div>
+  </div>
+  <a href="{{ url_for('coach.register_player') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-user-plus"></i> Register Player</a>
+</div>
+
+<div class="panel">
+  <form class="search-bar" method="GET">
+    <input class="form-control" type="text" name="q" value="{{ q }}" placeholder="Search by name or Player ID...">
+    <button class="btn btn-outline-dark" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+  </form>
+
+  {% if players %}
+    <div class="player-grid">
+      {% for p in players %}
+        <div class="player-card">
+          <div class="player-photo">
+            {% if p.picture %}
+              <img src="{{ url_for('static', filename=p.picture) }}" alt="Photo of {{ p.name }}">
+            {% else %}
+              <i class="fa-solid fa-user"></i>
+            {% endif %}
+          </div>
+          <div class="player-card-body">
+            <h4>{{ p.name }}</h4>
+            <div class="pos">{{ p.position }}</div>
+            <div class="meta">ID {{ p.player_id }}</div>
+            <a href="{{ url_for('coach.player_detail', player_id=p.id) }}" class="btn btn-outline-dark btn-sm btn-block">View</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-futbol"></i><p>No players match your search.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

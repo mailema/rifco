@@ -1,0 +1,22 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'leagues' %}
+{% block title %}Create League — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>Create League</h1>
+    <div class="breadcrumb"><a href="{{ url_for('chairman.leagues') }}">Leagues</a> / Create</div>
+  </div>
+</div>
+
+<div class="panel" style="max-width:480px;">
+  <form method="POST" novalidate>
+    {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+    <div class="form-group">
+      <label for="name">League Name</label>
+      <input class="form-control" type="text" id="name" name="name" required placeholder="e.g. RIFCO Premier League">
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Create League</button>
+  </form>
+</div>
+{% endblock %}

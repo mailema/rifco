@@ -1,0 +1,60 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'dashboard' %}
+{% block title %}Chairman Dashboard — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>Chairman Dashboard</h1>
+    <div class="breadcrumb">Welcome back, {{ current_user.name }}</div>
+  </div>
+  <a href="{{ url_for('chairman.register_member') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-user-plus"></i> Register Member</a>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="stat-value">{{ stats.members }}</div><div class="stat-label">Members</div></div>
+  <div class="stat-card"><div class="stat-value">{{ stats.teams }}</div><div class="stat-label">Teams</div></div>
+  <div class="stat-card"><div class="stat-value">{{ stats.leagues }}</div><div class="stat-label">Leagues</div></div>
+  <div class="stat-card"><div class="stat-value">{{ stats.players }}</div><div class="stat-label">Players</div></div>
+  <div class="stat-card"><div class="stat-value">{{ stats.transfers }}</div><div class="stat-label">Transfers</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-header">
+    <h3>System Controls</h3>
+    <a href="{{ url_for('chairman.system_controls') }}" class="btn btn-outline-dark btn-sm">Manage</a>
+  </div>
+  <div class="flex flex-wrap gap-sm">
+    <span class="badge {{ 'badge-green' if settings.player_update_open else 'badge-red' }}">
+      Player Updates: {{ 'Open' if settings.player_update_open else 'Closed' }}
+    </span>
+    <span class="badge {{ 'badge-green' if settings.transfer_open else 'badge-red' }}">
+      Transfers: {{ 'Open' if settings.transfer_open else 'Closed' }}
+    </span>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-header">
+    <h3>Recent Transfers</h3>
+  </div>
+  {% if recent_transfers %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Player</th><th>From</th><th>To</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for t in recent_transfers %}
+            <tr>
+              <td>{{ t.player.name }}</td>
+              <td>{{ t.from_team.team_name }}</td>
+              <td>{{ t.to_team.team_name }}</td>
+              <td>{{ t.transferred_at.strftime('%d %b %Y') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-right-left"></i><p>No transfers recorded yet.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}RIFCO — Ringim Football Coaches Organization{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-kicker">Football Administration, Done Right</span>
+    <h1>RINGIM FOOTBALL COACHES ORGANIZATION</h1>
+    <div class="hero-acronym">RIFCO</div>
+    <p class="subtitle">Uniting Football Coaches, Developing Teams, Building the Future of Football.</p>
+    <div class="hero-actions">
+      <a href="#about" class="btn btn-gold">Explore RIFCO</a>
+      <a href="#portals" class="btn btn-outline">Access Portals</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="container about-grid">
+    <div>
+      <span class="kicker">About RIFCO</span>
+      <h2>A Home for Football Coaches</h2>
+      <p>
+        RIFCO is a football coaches organization dedicated to raising the standard of the
+        game at the grassroots level — supporting coaches, organizing teams and leagues,
+        developing players, and administering responsible player transfers.
+      </p>
+      <ul class="about-list">
+        <li><i class="fa-solid fa-circle-check"></i> Supporting and representing football coaches</li>
+        <li><i class="fa-solid fa-circle-check"></i> Organizing structured teams and leagues</li>
+        <li><i class="fa-solid fa-circle-check"></i> Player development and registration</li>
+        <li><i class="fa-solid fa-circle-check"></i> Responsible, auditable player transfers</li>
+        <li><i class="fa-solid fa-circle-check"></i> Strengthening football administration</li>
+      </ul>
+    </div>
+    <div class="about-visual" aria-hidden="true">
+      <i class="fa-solid fa-futbol"></i>
+    </div>
+  </div>
+</section>
+
+<section class="section section--muted" id="portals">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">Access</span>
+      <h2>RIFCO PORTALS</h2>
+      <p>Three dedicated portals keep the organization, coaches, and player movement running smoothly and securely.</p>
+    </div>
+    <div class="portal-grid">
+      <div class="portal-card">
+        <div class="icon"><i class="fa-solid fa-user-tie"></i></div>
+        <h3>Chairman Portal</h3>
+        <p>Manage members, teams, leagues, players and organization operations.</p>
+        <a href="{{ url_for('chairman.dashboard') }}" class="btn btn-primary btn-sm">Enter Portal</a>
+      </div>
+      <div class="portal-card">
+        <div class="icon"><i class="fa-solid fa-clipboard-user"></i></div>
+        <h3>Coaches Portal</h3>
+        <p>Manage your team and register and update your players.</p>
+        <a href="{{ url_for('coach.dashboard') }}" class="btn btn-primary btn-sm">Enter Portal</a>
+      </div>
+      <div class="portal-card">
+        <div class="icon"><i class="fa-solid fa-right-left"></i></div>
+        <h3>Transfer Portal</h3>
+        <p>Manage authorized player transfers between registered teams.</p>
+        <a href="{{ url_for('transfer.portal') }}" class="btn btn-primary btn-sm">Enter Portal</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">Platform</span>
+      <h2>RIFCO FOOTBALL MANAGEMENT</h2>
+      <p>Everything the organization needs to run leagues, teams, and player movement in one place.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card"><i class="fa-solid fa-trophy"></i><h4>Teams &amp; Leagues</h4><p>Structured leagues with registered, verified teams.</p></div>
+      <div class="feature-card"><i class="fa-solid fa-people-group"></i><h4>Player Management</h4><p>Every player registered with a globally unique Player ID.</p></div>
+      <div class="feature-card"><i class="fa-solid fa-whistle"></i><h4>Coach Management</h4><p>Each coach linked to exactly one registered team.</p></div>
+      <div class="feature-card"><i class="fa-solid fa-right-left"></i><h4>Player Transfers</h4><p>Controlled, auditable transfers between registered teams.</p></div>
+      <div class="feature-card"><i class="fa-solid fa-building-shield"></i><h4>Organization Management</h4><p>Centralized member records and organizational ranks.</p></div>
+      <div class="feature-card"><i class="fa-solid fa-lock"></i><h4>Secure Access</h4><p>Role-based portals — every action verified on the backend.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">Competitions</span>
+      <h2>RIFCO LEAGUES</h2>
+      <p>
+        {% if leagues %}
+          Registered leagues within the RIFCO structure.
+        {% else %}
+          Example league structure — real leagues will appear here once registered by the Chairman.
+        {% endif %}
+      </p>
+    </div>
+    <div class="league-grid">
+      {% if leagues %}
+        {% for league in leagues %}
+          <div class="league-card">
+            <div class="league-banner"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="league-body">
+              <h4>{{ league.name }}</h4>
+              <p>{{ league.teams | length }} registered team{{ '' if league.teams|length == 1 else 's' }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {# Temporary presentation examples only - not read from the database yet. #}
+        <div class="league-card">
+          <div class="league-banner"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="league-body"><h4>RIFCO Premier League</h4><p>Example league — placeholder content</p></div>
+        </div>
+        <div class="league-card">
+          <div class="league-banner"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="league-body"><h4>RIFCO Division One</h4><p>Example league — placeholder content</p></div>
+        </div>
+        <div class="league-card">
+          <div class="league-banner"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="league-body"><h4>RIFCO Division Two</h4><p>Example league — placeholder content</p></div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>BUILDING THE FUTURE OF FOOTBALL TOGETHER</h2>
+  <p>Join a growing network of coaches, teams and leagues working under one professional organization.</p>
+  <a href="#about" class="btn btn-gold">Explore RIFCO</a>
+</section>
+
+{% endblock %}

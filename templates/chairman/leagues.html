@@ -1,0 +1,34 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'leagues' %}
+{% block title %}Leagues — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>Leagues</h1>
+    <div class="breadcrumb">{{ leagues|length }} total</div>
+  </div>
+  <a href="{{ url_for('chairman.create_league') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Create League</a>
+</div>
+
+<div class="panel">
+  {% if leagues %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>League</th><th>Teams</th><th>Created</th><th></th></tr></thead>
+        <tbody>
+          {% for l in leagues %}
+            <tr>
+              <td>{{ l.name }}</td>
+              <td>{{ l.teams|length }}</td>
+              <td>{{ l.created_at.strftime('%d %b %Y') }}</td>
+              <td><a href="{{ url_for('chairman.league_detail', league_id=l.id) }}" class="btn btn-outline-dark btn-sm">View Teams</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-shield-halved"></i><p>No leagues yet. Create the first one.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "coach/_layout.html" %}
+{% set active = 'dashboard' %}
+{% block title %}Coach Dashboard — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>Coach Dashboard</h1>
+    <div class="breadcrumb">Welcome back, {{ current_user.name }}</div>
+  </div>
+  {% if team %}
+    <a href="{{ url_for('coach.register_player') }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-user-plus"></i> Register Player</a>
+  {% endif %}
+</div>
+
+{% if not team %}
+  <div class="panel">
+    <div class="empty-state">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>You are not currently assigned to a team. Please contact the Chairman.</p>
+    </div>
+  </div>
+{% else %}
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-value">{{ team.team_name }}</div><div class="stat-label">My Team</div></div>
+    <div class="stat-card"><div class="stat-value">{{ team.league.name }}</div><div class="stat-label">League</div></div>
+    <div class="stat-card"><div class="stat-value">{{ players|length }}</div><div class="stat-label">Players</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Player Updates</h3>
+    </div>
+    <span class="badge {{ 'badge-green' if settings.player_update_open else 'badge-red' }}">
+      {{ 'Open — you may edit players' if settings.player_update_open else 'Closed by the Chairman' }}
+    </span>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <h3>Recent Players</h3>
+      <a href="{{ url_for('coach.players') }}" class="btn btn-outline-dark btn-sm">View All</a>
+    </div>
+    {% if players %}
+      <div class="player-grid">
+        {% for p in players[:8] %}
+          <div class="player-card">
+            <div class="player-photo">
+              {% if p.picture %}
+                <img src="{{ url_for('static', filename=p.picture) }}" alt="Photo of {{ p.name }}">
+              {% else %}
+                <i class="fa-solid fa-user"></i>
+              {% endif %}
+            </div>
+            <div class="player-card-body">
+              <h4>{{ p.name }}</h4>
+              <div class="pos">{{ p.position }}</div>
+              <div class="meta">ID {{ p.player_id }}</div>
+              <a href="{{ url_for('coach.player_detail', player_id=p.id) }}" class="btn btn-outline-dark btn-sm btn-block">View</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state"><i class="fa-solid fa-futbol"></i><p>No players registered yet.</p></div>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

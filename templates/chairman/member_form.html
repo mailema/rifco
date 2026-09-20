@@ -1,0 +1,77 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'members' %}
+{% block title %}{{ 'Edit Member' if mode == 'edit' else 'Register Member' }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ 'Edit Member' if mode == 'edit' else 'Register Member' }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('chairman.members') }}">Members</a> / {{ 'Edit' if mode == 'edit' else 'Register' }}</div>
+  </div>
+</div>
+
+<div class="panel" style="max-width:640px;">
+  <form method="POST" novalidate enctype="application/x-www-form-urlencoded">
+    {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input class="form-control" type="text" id="name" name="name" required value="{{ form.get('name', '') }}">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input class="form-control" type="email" id="email" name="email" required value="{{ form.get('email', '') }}">
+      </div>
+      <div class="form-group">
+        <label for="member_id">Member ID</label>
+        <input class="form-control" type="text" id="member_id" name="member_id" required
+               value="{{ form.get('member_id', '') }}" {{ 'readonly' if mode == 'edit' else '' }}>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input class="form-control" type="text" id="phone" name="phone" required value="{{ form.get('phone', '') }}">
+      </div>
+      <div class="form-group">
+        <label for="rank">Rank</label>
+        <select class="form-control" id="rank" name="rank" required>
+          <option value="">Select rank</option>
+          {% for r in ranks %}
+            <option value="{{ r }}" {{ 'selected' if form.get('rank') == r }}>{{ r }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea class="form-control" id="address" name="address" required>{{ form.get('address', '') }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="team_id">Team <span class="form-hint" style="display:inline">(required only when rank is Coach)</span></label>
+      <select class="form-control" id="team_id" name="team_id">
+        <option value="">No team</option>
+        {% for t in teams %}
+          <option value="{{ t.id }}" {{ 'selected' if (form.get('team_id')|string) == (t.id|string) }}>{{ t.team_name }} ({{ t.league.name }})</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if mode == 'create' %}
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
+        <div class="form-hint">Minimum 8 characters. The member should change this after first login.</div>
+      </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary btn-block">
+      {{ 'Save Changes' if mode == 'edit' else 'Register Member' }}
+    </button>
+  </form>
+</div>
+{% endblock %}

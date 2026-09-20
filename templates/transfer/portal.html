@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Transfer Portal — RIFCO{% endblock %}
+{% block content %}
+<section class="section section--muted" style="min-height:70vh;">
+  <div class="container" style="max-width:760px;">
+    <div class="section-heading">
+      <span class="kicker">RIFCO</span>
+      <h2>Transfer Portal</h2>
+      <p>Search for a player by their current team, then confirm the transfer to a new team.</p>
+    </div>
+
+    {% if settings.transfer_open %}
+      <div class="status-banner open"><i class="fa-solid fa-circle-check"></i> Transfers are currently open.</div>
+    {% else %}
+      <div class="status-banner closed"><i class="fa-solid fa-lock"></i> Transfers are currently closed by the Chairman.</div>
+    {% endif %}
+
+    <div class="panel">
+      <div class="panel-header"><h3>Find a Player</h3></div>
+      <form method="POST" action="{{ url_for('transfer.search_player') }}" novalidate>
+        {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="player_id">Player ID</label>
+            <input class="form-control" type="text" id="player_id" name="player_id" required
+                   value="{{ found_player.player_id if found_player else '' }}">
+          </div>
+          <div class="form-group">
+            <label for="from_team_id">Current Team</label>
+            <select class="form-control" id="from_team_id" name="from_team_id" required>
+              <option value="">Select current team</option>
+              {% for t in teams %}
+                <option value="{{ t.id }}" {{ 'selected' if from_team and from_team.id == t.id }}>{{ t.team_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-outline-dark btn-block"><i class="fa-solid fa-magnifying-glass"></i> Search Player</button>
+      </form>
+    </div>
+
+    {% if found_player %}
+      <div class="panel">
+        <div class="panel-header"><h3>Confirm Transfer</h3></div>
+        <div class="transfer-flow">
+          <div class="team-chip">
+            <div class="label">Player</div>
+            <div class="name">{{ found_player.name }}</div>
+          </div>
+          <div class="team-chip">
+            <div class="label">From</div>
+            <div class="name">{{ from_team.team_name }}</div>
+          </div>
+          <div class="arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
+          <div class="team-chip">
+            <div class="label">To</div>
+            <div class="name">Select below</div>
+          </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('transfer.execute_transfer') }}"
+              onsubmit="return confirm('Confirm transfer of {{ found_player.name }}?');">
+          {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+          <input type="hidden" name="player_id" value="{{ found_player.player_id }}">
+          <input type="hidden" name="from_team_id" value="{{ from_team.id }}">
+
+          <div class="form-group">
+            <label for="to_team_id">Destination Team</label>
+            <select class="form-control" id="to_team_id" name="to_team_id" required>
+              <option value="">Select destination team</option>
+              {% for t in teams %}
+                {% if t.id != from_team.id %}
+                  <option value="{{ t.id }}">{{ t.team_name }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" {{ 'disabled' if not settings.transfer_open }}>
+            <i class="fa-solid fa-right-left"></i> Confirm Transfer
+          </button>
+        </form>
+      </div>
+    {% endif %}
+
+    <div class="text-center" style="margin-top:20px;">
+      <a href="{{ url_for('transfer.history') }}" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-clock-rotate-left"></i> View Transfer History</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

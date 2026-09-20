@@ -1,0 +1,46 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'system' %}
+{% block title %}System Controls — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>System Controls</h1>
+    <div class="breadcrumb">Control what coaches and transfer officers may do right now</div>
+  </div>
+</div>
+
+<div class="panel" style="max-width:600px;">
+  <form method="POST">
+    {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+
+    <div class="toggle-row">
+      <div class="toggle-copy">
+        <strong>Player Updates</strong>
+        <span>When open, coaches may edit their existing players' details.</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" name="player_update_open" {{ 'checked' if settings.player_update_open }}>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <div class="toggle-copy">
+        <strong>Transfers</strong>
+        <span>When open, transfer-authorized users may move players between teams.</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" name="transfer_open" {{ 'checked' if settings.transfer_open }}>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="margin-top:20px;">Save Settings</button>
+  </form>
+</div>
+
+<p class="form-hint" style="max-width:600px;">
+  These settings are enforced on every request — not just in the interface — so a
+  coach or transfer officer cannot bypass them by sending requests directly.
+</p>
+{% endblock %}

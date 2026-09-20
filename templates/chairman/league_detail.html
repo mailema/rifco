@@ -1,0 +1,39 @@
+{% extends "chairman/_layout.html" %}
+{% set active = 'leagues' %}
+{% block title %}{{ league.name }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ league.name }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('chairman.leagues') }}">Leagues</a> / {{ league.name }}</div>
+  </div>
+  <form method="POST" action="{{ url_for('chairman.delete_league', league_id=league.id) }}"
+        onsubmit="return confirm('Delete this league? This cannot be undone.');">
+    {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+    <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete League</button>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="panel-header"><h3>Teams in this league</h3></div>
+  {% if league.teams %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Team</th><th>Players</th><th>Coaches</th><th></th></tr></thead>
+        <tbody>
+          {% for t in league.teams %}
+            <tr>
+              <td>{{ t.team_name }}</td>
+              <td>{{ t.players|length }}</td>
+              <td>{{ t.coaches|length }}</td>
+              <td><a href="{{ url_for('chairman.team_detail', team_id=t.id) }}" class="btn btn-outline-dark btn-sm">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state"><i class="fa-solid fa-people-group"></i><p>No teams in this league yet.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

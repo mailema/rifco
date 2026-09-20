@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Players — RIFCO{% endblock %}
+{% block content %}
+<section class="section section--muted" style="min-height:60vh;">
+  <div class="container">
+    <div class="section-heading">
+      <span class="kicker">Roster</span>
+      <h2>Registered Players</h2>
+      <p>Players registered across every RIFCO team.</p>
+    </div>
+
+    {% if players %}
+      <div class="player-grid">
+        {% for player in players %}
+          <div class="player-card">
+            <div class="player-photo">
+              {% if player.picture %}
+                <img src="{{ url_for('static', filename=player.picture) }}" alt="Photo of {{ player.name }}">
+              {% else %}
+                <i class="fa-solid fa-user" aria-hidden="true"></i>
+              {% endif %}
+            </div>
+            <div class="player-card-body">
+              <h4>{{ player.name }}</h4>
+              <div class="pos">{{ player.position }}</div>
+              <div class="meta">{{ player.team.team_name }} &middot; ID {{ player.player_id }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i class="fa-solid fa-futbol"></i>
+        <p>No players have been registered yet.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

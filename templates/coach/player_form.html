@@ -1,0 +1,62 @@
+{% extends "coach/_layout.html" %}
+{% set active = 'register' if mode == 'create' else 'players' %}
+{% block title %}{{ 'Edit Player' if mode == 'edit' else 'Register Player' }} — RIFCO{% endblock %}
+{% block dash_content %}
+<div class="dash-topbar">
+  <div>
+    <h1>{{ 'Edit Player' if mode == 'edit' else 'Register Player' }}</h1>
+    <div class="breadcrumb"><a href="{{ url_for('coach.players') }}">My Players</a> / {{ 'Edit' if mode == 'edit' else 'Register' }}</div>
+  </div>
+</div>
+
+<div class="panel" style="max-width:560px;">
+  <form method="POST" enctype="multipart/form-data" novalidate>
+    {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+
+    <div class="form-group">
+      <label for="name">Player Name</label>
+      <input class="form-control" type="text" id="name" name="name" required value="{{ form.get('name', '') }}">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="position">Position</label>
+        <select class="form-control" id="position" name="position" required>
+          <option value="">Select position</option>
+          {% for pos in positions %}
+            <option value="{{ pos }}" {{ 'selected' if form.get('position') == pos }}>{{ pos }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input class="form-control" type="text" id="phone" name="phone" required value="{{ form.get('phone', '') }}">
+      </div>
+    </div>
+
+    {% if mode == 'create' %}
+      <div class="form-group">
+        <label for="player_id">Player ID</label>
+        <input class="form-control" type="text" id="player_id" name="player_id" required value="{{ form.get('player_id', '') }}">
+        <div class="form-hint">Must be unique across every team in RIFCO.</div>
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label>Player ID</label>
+        <input class="form-control" type="text" value="{{ player.player_id }}" disabled>
+        <div class="form-hint">Player ID cannot be changed after registration.</div>
+      </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label for="picture">Player Photo</label>
+      <input class="form-control" type="file" id="picture" name="picture" accept=".png,.jpg,.jpeg,.webp">
+      <div class="form-hint">PNG, JPG or WEBP. Max 3&nbsp;MB. Optional.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">
+      {{ 'Save Changes' if mode == 'edit' else 'Register Player' }}
+    </button>
+  </form>
+</div>
+{% endblock %}
