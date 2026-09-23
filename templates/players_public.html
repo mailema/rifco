@@ -15,7 +15,7 @@
           <div class="player-card">
             <div class="player-photo">
               {% if player.picture %}
-                <img src="{{ url_for('static', filename=player.picture) }}" alt="Photo of {{ player.name }}">
+                <img src="{{ picture_url(player.picture) }}" alt="Photo of {{ player.name }}">
               {% else %}
                 <i class="fa-solid fa-user" aria-hidden="true"></i>
               {% endif %}
