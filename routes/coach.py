@@ -22,8 +22,20 @@ def _allowed_image(filename: str) -> bool:
 
 def _save_player_picture(file_storage):
     """Save an uploaded picture with a random, collision-proof name
-    and return the path to store on the Player record. Returns None
-    if no file was provided."""
+    and return the value to store on the Player record. Returns None
+    if no file was provided.
+
+    On Vercel (and anywhere else with BLOB_READ_WRITE_TOKEN set),
+    the file is uploaded to Vercel Blob storage and the returned
+    value is a full https:// URL - Vercel's filesystem is read-only
+    at runtime (aside from an ephemeral /tmp that doesn't survive
+    between requests), so writing to static/uploads/ there would
+    silently vanish.
+
+    Without that token (local development), it falls back to saving
+    on local disk under static/uploads/players/, returning a path
+    relative to the static folder, exactly as before.
+    """
     if not file_storage or not file_storage.filename:
         return None
     if not _allowed_image(file_storage.filename):
@@ -31,6 +43,17 @@ def _save_player_picture(file_storage):
 
     ext = file_storage.filename.rsplit(".", 1)[-1].lower()
     safe_name = f"{uuid.uuid4().hex}.{ext}"
+
+    if os.environ.get("BLOB_READ_WRITE_TOKEN"):
+        import vercel_blob
+
+        result = vercel_blob.put(
+            f"players/{safe_name}",
+            file_storage.read(),
+            {"access": "public"},
+        )
+        return result["url"]
+
     folder = current_app.config["UPLOAD_FOLDER"]
     os.makedirs(folder, exist_ok=True)
     file_storage.save(os.path.join(folder, safe_name))
