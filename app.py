@@ -75,6 +75,24 @@ def create_app(config_class=Config):
         from datetime import datetime
         return {"current_year": datetime.utcnow().year}
 
+    @app.template_global()
+    def picture_url(picture):
+        """Resolve a Player.picture value to a renderable <img> src.
+
+        Older records (saved before Vercel Blob was wired up, or
+        anything saved during local development) hold a path
+        relative to the static folder. Newer records hold a full
+        https:// URL from Vercel Blob. Templates just call
+        picture_url(player.picture) and don't need to know which
+        kind they have.
+        """
+        if not picture:
+            return ""
+        if picture.startswith("http://") or picture.startswith("https://"):
+            return picture
+        from flask import url_for
+        return url_for("static", filename=picture)
+
     # ---- dev-only table creation -------------------------------------
     # Never drops or recreates existing data. If the database already
     # has these tables, this is a no-op.
